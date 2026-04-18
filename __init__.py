@@ -10,10 +10,9 @@ Configuration:
   Or use the form dialog that appears.
 
 Installation:
-  1. In Anki, go to Tools -> Add-ons -> Open Add-ons Folder
-  2. Create a new folder called "google_image_search"
-  3. Copy this file into that folder as __init__.py
-  4. Restart Anki
+  1. Download quick_image_search.ankiaddon (run build.py to generate it)
+  2. In Anki, go to Tools -> Add-ons -> Install from file...
+  3. Select the downloaded file and restart Anki
 """
 
 import os

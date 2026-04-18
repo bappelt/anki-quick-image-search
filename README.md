@@ -40,3 +40,7 @@ Supported domains include google.com, google.co.uk, google.de, google.fr, google
 ## License
 
 MIT
+
+## Show Your Support
+    
+[![Buy me a coffee](https://media.giphy.com/media/o7RZbs4KAA6tvM4H6j/giphy.gif)](https://buymeacoffee.com/bappelt)

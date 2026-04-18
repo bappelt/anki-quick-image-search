@@ -78,7 +78,7 @@ def save_config(conf):
 class ConfigDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Google Image Search - Settings")
+        self.setWindowTitle("Quick Image Search - Settings")
         self.setMinimumWidth(400)
 
         conf = get_config()

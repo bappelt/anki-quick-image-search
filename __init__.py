@@ -1,8 +1,8 @@
 """
-Google Image Search for Anki Editor
-====================================
+Quick Image Search for Anki
+============================
 Adds a "Search Images" button to the editor toolbar (in the Browse
-window). Clicking it opens a Google Image search for the text in a
+window). Clicking it opens an image search for the text in a
 configurable field of the current note.
 
 Configuration:

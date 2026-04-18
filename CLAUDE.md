@@ -1,7 +1,7 @@
-# Anki Google Image Search Add-on
+# Quick Image Search for Anki
 
 ## Overview
-An Anki add-on that adds a "Search Images" button to the editor toolbar in the Browse window. Clicking it opens a Google Image search for the text in a configurable note field, helping users quickly find images to add to their flashcards.
+An Anki add-on that adds a "Search Images" button to the editor toolbar in the Browse window. Clicking it opens an image search for the text in a configurable note field, helping users quickly find images to add to their flashcards.
 
 ## Files
 - `__init__.py` — main add-on code

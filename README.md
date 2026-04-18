@@ -12,13 +12,9 @@ An Anki add-on that adds a **Search Images** button to the editor toolbar. Click
 ## Installation
 
 ### From AnkiWeb
-*(Coming soon)*
-
-### Manual
-1. In Anki, go to **Tools → Add-ons → Open Add-ons Folder**
-2. Create a subfolder named `quick_image_search`
-3. Copy `__init__.py`, `search.svg`, and `config.json` into that folder
-4. Restart Anki
+1. In Anki, go to **Tools → Add-ons → Get Add-ons...**
+2. Enter code **183246496**
+3. Restart Anki
 
 ### From `.ankiaddon` file
 1. Download `quick_image_search.ankiaddon`

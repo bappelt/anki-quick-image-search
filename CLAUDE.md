@@ -7,7 +7,8 @@ An Anki add-on that adds a "Search Images" button to the editor toolbar in the B
 - `__init__.py` — main add-on code
 - `search.svg` — magnifying glass / image icon for the toolbar button
 - `config.json` — default configuration
-- `google_image_search.ankiaddon` — installable package (zip of the above + manifest.json)
+- `build.py` — script to package the add-on
+- `quick_image_search.ankiaddon` — installable package (zip of the above + manifest.json)
 
 ## Environment
 - Anki version: 25.02.5
@@ -23,11 +24,11 @@ An Anki add-on that adds a "Search Images" button to the editor toolbar in the B
 1. `gui_hooks.editor_did_init_buttons` — adds the toolbar button when the editor initializes
 2. `editor.addButton()` — creates the button with the SVG icon
 3. When clicked, reads the configured field from `editor.note`
-4. URL-encodes the field text and opens a Google Image search in the default browser
+4. URL-encodes the field text and opens an image search in the default browser
 5. `mw.addonManager.setConfigAction()` — registers a custom Qt config dialog instead of raw JSON editing
 
 ## Configuration
-Users access settings via **Tools → Add-ons → Google Image Search for Editor → Config**
+Users access settings via **Tools → Add-ons → Quick Image Search for Anki → Config**
 
 Settings:
 - `field_name` — which note field to search (default: `"Front"`)
@@ -45,23 +46,11 @@ The config dialog (`ConfigDialog` class) is a Qt `QDialog` with:
 - **`collection.anki21b`** is zstd-compressed and cannot be opened directly with sqlite3 — decompress first with the `zstandard` Python package.
 
 ## Packaging
-To rebuild the `.ankiaddon`:
-```python
-import zipfile, json
-
-manifest = {
-    "package": "google_image_search",
-    "name": "Google Image Search for Editor",
-    "mod": 1709150409,
-    "min_point_version": 50
-}
-
-with zipfile.ZipFile("google_image_search.ankiaddon", "w", zipfile.ZIP_DEFLATED) as zf:
-    zf.write("__init__.py")
-    zf.write("search.svg")
-    zf.write("config.json")
-    zf.writestr("manifest.json", json.dumps(manifest))
+To rebuild the `.ankiaddon`, run:
 ```
+python3 build.py
+```
+This generates `quick_image_search.ankiaddon` with a fresh `mod` timestamp.
 
 ## Future Ideas
 - Publish to AnkiWeb shared add-ons

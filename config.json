@@ -1,4 +1,5 @@
 {
     "field_name": "Front",
-    "google_domain": "google.com"
+    "google_domain": "google.com",
+    "shortcut": "Ctrl+Shift+1"
 }

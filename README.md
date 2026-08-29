@@ -7,6 +7,7 @@ An Anki add-on that adds a **Search Images** button to the editor toolbar. Click
 - Toolbar button in the Browse window editor
 - Searches the configured note field (falls back to the first field if not found)
 - Supports 12 Google country domains plus a custom domain option
+- Configurable keyboard shortcut (default `Ctrl+Shift+1`, shown as ⇧⌘1 on macOS)
 - Simple settings dialog via **Tools → Add-ons → Config**
 
 ## Installation
@@ -29,6 +30,7 @@ Go to **Tools → Add-ons → Quick Image Search for Anki → Config**
 |---|---|---|
 | `field_name` | `Front` | Which note field to search |
 | `google_domain` | `google.com` | Which image search domain to use |
+| `shortcut` | `Ctrl+Shift+1` | Keyboard shortcut for the button (leave empty to disable) |
 
 Supported domains include google.com, google.co.uk, google.de, google.fr, google.co.jp, and more — or enter a custom domain.
 

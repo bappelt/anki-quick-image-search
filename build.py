@@ -7,7 +7,10 @@ manifest = {
     "name": "Quick Image Search for Anki",
     "mod": int(time.time()),
     "min_point_version": 50,
-    "version": "1.0.0"
+    # Cosmetic only: Anki compares "mod" timestamps, never this string.
+    # Note that AnkiWeb overwrites "mod" with its own upload time, so the
+    # timestamp below only matters for direct .ankiaddon installs.
+    "human_version": "1.1.0",
 }
 
 output = "quick_image_search.ankiaddon"

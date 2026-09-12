@@ -416,7 +416,8 @@ def get_search_text(editor):
     conf = get_config()
     field_name = conf["field_name"]
 
-    field_names = [f["name"] for f in note.model()["flds"]]
+    note_type = note.note_type() if hasattr(note, "note_type") else note.model()
+    field_names = [f["name"] for f in note_type["flds"]]
     if field_name in field_names:
         raw = note[field_name]
     else:

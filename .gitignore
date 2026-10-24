@@ -2,4 +2,10 @@
 .idea/
 *.pyc
 __pycache__/
+
+# Build output
+dist/
 *.ankiaddon
+
+# Machine-local Claude Code settings (project skills in .claude/skills/ are tracked)
+.claude/settings.local.json

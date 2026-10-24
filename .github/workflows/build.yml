@@ -1,0 +1,94 @@
+name: Build add-on
+
+# Builds dist/quick_image_search-<version>.ankiaddon with build.py and
+# attaches it to the run as an artifact.
+#
+# <version> comes from the VERSION file. Pushing a tag v<version> also
+# publishes the .ankiaddon as a GitHub Release, with that version's section
+# of CHANGELOG.md as the release notes. The run fails if the tag doesn't
+# match VERSION or CHANGELOG.md has no "## [<version>]" section.
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.x"
+
+      - name: Read version
+        id: version
+        run: |
+          version="$(tr -d '[:space:]' < VERSION)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Version: $version"
+          if [[ "$GITHUB_REF_TYPE" == "tag" && "$GITHUB_REF_NAME" != "v$version" ]]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match VERSION $version (expected v$version)"
+            exit 1
+          fi
+          if [[ "$GITHUB_REF_TYPE" == "tag" ]] && ! grep -qF "## [$version]" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md has no '## [$version]' section for this release"
+            exit 1
+          fi
+
+      - name: Check add-on syntax
+        run: python -m py_compile __init__.py
+
+      - name: Build add-on
+        run: python build.py
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: quick_image_search-${{ steps.version.outputs.version }}.ankiaddon
+          path: dist/quick_image_search-${{ steps.version.outputs.version }}.ankiaddon
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          # A version with a hyphen (e.g. 1.2.0-beta.1) is published as a prerelease.
+          prerelease=()
+          [[ "$VERSION" == *-* ]] && prerelease=(--prerelease)
+          # Release notes: this version's CHANGELOG.md section, without its
+          # heading, up to the next "## [" heading or the link references.
+          awk -v head="## [$VERSION]" '
+            index($0, head) == 1 { on = 1; next }
+            on && (/^## \[/ || /^\[[^]]+\]: /) { exit }
+            on
+          ' CHANGELOG.md > release-notes.md
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "v$VERSION" \
+            --notes-file release-notes.md \
+            --verify-tag \
+            "${prerelease[@]}"

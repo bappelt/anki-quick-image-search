@@ -7,18 +7,20 @@ An Anki add-on that adds a "Search Images" button to the editor toolbar in the B
 - `__init__.py` — main add-on code
 - `search.svg` — magnifying glass / image icon for the toolbar button
 - `config.json` — default configuration
-- `build.py` — script to package the add-on
-- `quick_image_search.ankiaddon` — installable package (zip of the above + manifest.json)
-
-## Environment
-- Anki version: 25.9.4 (bundled Python 3.13; earlier 25.x bundled 3.9)
-- Target: `min_point_version` 50, so keep the code 3.9-compatible
-- Platform: macOS 14.6.1 arm64
-- Qt: 6.6.2 / PyQt 6.6.1
+- `VERSION` — the add-on's version, and the only place it is written down
+- `build.py` — packages the add-on; generates `manifest.json` and zips it with the files in its `FILES` list
+- `dist/quick_image_search-<version>.ankiaddon` — the installable package (build output, not tracked)
 
 ## Important Python Notes
-- The add-on targets Anki 2.1.50+, which may bundle Python 3.9, so **do not use `str | None` syntax** — use `Optional[str]` from `typing` instead
+- The add-on targets Anki 2.1.50+ (`min_point_version` 50 in `build.py`), which may bundle Python 3.9, so keep the code 3.9-compatible: **do not use `str | None` syntax** — use `Optional[str]` from `typing` instead
 - `collection.anki21b` files are zstd-compressed SQLite databases
+
+## Rules
+- **The version lives only in `VERSION`.** `build.py`, CI and the release skill read it from there. Don't hard-code versions anywhere else.
+- **Changelog with the change.** When a change is visible to users, add an entry under `## [Unreleased]` in `CHANGELOG.md` in the same commit. Skip CI, refactors and maintainer docs.
+- **Releases follow the release skill** (`.claude/skills/release/SKILL.md`, run as `/release`). Pushing a `v<version>` tag makes `.github/workflows/build.yml` publish the GitHub Release; the AnkiWeb upload is a separate, manual step.
+- **The AnkiWeb listing lives in the repo.** `ankiweb_description.html` is the description and `ankiweb.json` holds the other form fields. Keep the description ASCII-only (use `&rarr;`, `&mdash;`); `LC_ALL=C grep -n '[^ -~]' ankiweb_description.html` must print nothing.
+- **Testing a change in Anki:** copy the changed files into the installed add-on's folder under `addons21/` in Anki's data folder and restart Anki. Check which folder exists: `183246496` for an AnkiWeb install (the next AnkiWeb update overwrites local changes), `quick_image_search` for one installed from a file. Don't install a built `.ankiaddon` alongside an AnkiWeb install: Anki treats them as two separate add-ons, so both would add a Search Images button and both would register the same shortcut.
 
 ## How It Works
 1. `gui_hooks.editor_did_init_buttons` — adds the toolbar button when the editor initializes
@@ -59,10 +61,9 @@ To rebuild the `.ankiaddon`, run:
 ```
 python3 build.py
 ```
-This generates `quick_image_search.ankiaddon` with a fresh `mod` timestamp.
+This generates `dist/quick_image_search-<version>.ankiaddon`, with the version read from `VERSION` and a fresh `mod` timestamp. There is no static `manifest.json`; `build.py` writes it. A new file the add-on needs at runtime must be added to `build.py`'s `FILES` list.
 
 ## Future Ideas
-- Publish to AnkiWeb shared add-ons
 - Change default `field_name` from "Front" to something smarter (auto-detect first field)
 - Support searching multiple fields
 - Add option to search a different image provider (e.g. Bing, DuckDuckGo)

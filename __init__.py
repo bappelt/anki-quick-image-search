@@ -10,7 +10,10 @@ Configuration:
   Or use the form dialog that appears.
 
 Installation:
-  1. Download quick_image_search.ankiaddon (run build.py to generate it)
+  From AnkiWeb: Tools -> Add-ons -> Get Add-ons..., code 183246496.
+  Or from a file:
+  1. Download quick_image_search-<version>.ankiaddon from the latest GitHub
+     release (or run build.py to generate it in dist/)
   2. In Anki, go to Tools -> Add-ons -> Install from file...
   3. Select the downloaded file and restart Anki
 """

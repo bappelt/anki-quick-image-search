@@ -7,8 +7,9 @@ An Anki add-on that adds a "Search Images" button to the editor toolbar in the B
 - `__init__.py` — main add-on code
 - `search.svg` — magnifying glass / image icon for the toolbar button
 - `config.json` — default configuration
-- `build.py` — script to package the add-on
-- `quick_image_search.ankiaddon` — installable package (zip of the above + manifest.json)
+- `VERSION` — the add-on's version, and the only place it is written down
+- `build.py` — packages the add-on; generates `manifest.json` and zips it with the files in its `FILES` list
+- `dist/quick_image_search-<version>.ankiaddon` — the installable package (build output, not tracked)
 
 ## Environment
 - Anki version: 25.9.4 (bundled Python 3.13; earlier 25.x bundled 3.9)
@@ -59,7 +60,7 @@ To rebuild the `.ankiaddon`, run:
 ```
 python3 build.py
 ```
-This generates `quick_image_search.ankiaddon` with a fresh `mod` timestamp.
+This generates `dist/quick_image_search-<version>.ankiaddon`, with the version read from `VERSION` and a fresh `mod` timestamp. There is no static `manifest.json`; `build.py` writes it. A new file the add-on needs at runtime must be added to `build.py`'s `FILES` list.
 
 ## Future Ideas
 - Publish to AnkiWeb shared add-ons

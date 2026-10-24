@@ -10,6 +10,11 @@ tag or GitHub release.
 
 ## [Unreleased]
 
+### Fixed
+
+- No more "model is deprecated" warning in recent Anki versions when
+  searching.
+
 ## [1.1.0] - 2026-08-29
 
 ### Added

@@ -10,6 +10,8 @@ tag or GitHub release.
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-10-24
+
 ### Fixed
 
 - No more "model is deprecated" warning in recent Anki versions when
@@ -27,4 +29,5 @@ tag or GitHub release.
 
 - Initial release.
 
-[Unreleased]: https://github.com/bappelt/anki-quick-image-search/commits/main
+[Unreleased]: https://github.com/bappelt/anki-quick-image-search/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/bappelt/anki-quick-image-search/releases/tag/v1.1.1

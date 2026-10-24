@@ -231,6 +231,11 @@ Use these when they're available; load the claude-in-chrome skill first.
      then dispatch `input` and `change` events so the page's framework
      notices the change. Do the same for any text box you correct. Read the
      value back afterwards and compare it with the file.
+   - **Selecting the text boxes in JavaScript:** the two branch version
+     boxes have no `type` attribute, so `input[type=text]` finds only
+     Title, Tags and Support Page. Use `input:not([type=file])`, which
+     returns all five in form order: Title, Tags, Support Page, branch
+     minimum, branch maximum.
 3. **Don't click Save yet.** Take a screenshot and show the user the filled
    form: title, tags, support page, branch versions, the attached file name,
    and that the description is the current listing. Ask for an explicit

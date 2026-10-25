@@ -4,5 +4,5 @@
   "tags": "image images",
   "support_page": "https://github.com/bappelt/anki-quick-image-search/issues",
   "min_anki_version": "2.1.50",
-  "max_anki_version_tested": "25.09.4"
+  "max_anki_version_tested": "26.09.3"
 }

@@ -41,7 +41,7 @@ Supported domains include google.com, google.co.uk, google.de, google.fr, google
 ## Requirements
 
 - Anki 2.1.50 or later
-- Tested on Anki 25.02.5 (Python 3.9, Qt 6.6.2, macOS arm64)
+- Tested on Anki 26.09.3
 
 ## License
 

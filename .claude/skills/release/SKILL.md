@@ -81,11 +81,15 @@ against the code being released:
 - **Minimum Anki:** `min_anki_version` matches `min_point_version` in
   `build.py` (`50` is `2.1.50`; newer values are `YYMMPP`, so `231000` is
   `23.10`).
-- **Tested Anki:** `max_anki_version_tested` is the newest Anki this release
-  was tested on. The user's installed version is in the folder name of
-  `~/Library/Application Support/AnkiProgramFiles/.venv/lib/python3.*/site-packages/aqt-*.dist-info`;
-  AnkiWeb writes `25.9.4` as `25.09.4`. Only raise it if the user has run
-  this release on that version.
+- **Tested Anki:** `max_anki_version_tested` (and the README's "Tested on
+  Anki" line) is the newest Anki this release was tested on. Ask the user
+  which version they ran it on; Anki shows it in Help &rarr; About. Don't
+  infer it from files on disk: the launcher's `.venv` can keep an old
+  `aqt-*.dist-info` after Anki updates, and the launcher app's own version
+  can differ from the Anki it runs. Compare with the newest Anki release
+  (`gh release list -R ankitects/anki --limit 3`) and raise the question if
+  the recorded version is behind it. AnkiWeb writes `26.9.3` as `26.09.3`.
+  Only raise the value to a version the user has run this release on.
 - **Encoding:** the description must stay ASCII (use `&rarr;`, `&mdash;`
   and similar entities), because a non-ASCII arrow was once garbled into
   `â†’` on AnkiWeb. Check with `LC_ALL=C grep -n '[^ -~]' ankiweb_description.html`,

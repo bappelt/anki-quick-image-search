@@ -408,31 +408,22 @@ def strip_html(text):
     return text.strip()
 
 
-def get_search_text(editor):
-    # type: (Editor) -> Optional[str]
-    """Get the text from the configured field of the current note,
-    falling back to the first field if not found."""
-    note = editor.note
-    if not note or not note.fields:
+def _extract_text_from_fields(fields, model, field_name):
+    # type: (list, dict, str) -> Optional[str]
+    """Extract and strip text from fields matching field_name, fallback to first field."""
+    if not fields:
         return None
-
-    conf = get_config()
-    field_name = conf["field_name"]
-
-    note_type = note.note_type() if hasattr(note, "note_type") else note.model()
-    field_names = [f["name"] for f in note_type["flds"]]
+    field_names = [f["name"] for f in model.get("flds", [])]
     if field_name in field_names:
-        raw = note[field_name]
+        idx = field_names.index(field_name)
+        raw = fields[idx] if idx < len(fields) else fields[0]
     else:
-        raw = note.fields[0]
-
+        raw = fields[0]
     return strip_html(raw)
 
 
-def on_search_images(editor):
-    # type: (Editor) -> None
-    """Open a Google Image search for the current note's text."""
-    text = get_search_text(editor)
+def _search_url_for_text(text):
+    # type: (str) -> None
     if not text:
         tooltip("No card text found.")
         return
@@ -444,6 +435,57 @@ def on_search_images(editor):
     url = "https://www.%s/search?%s" % (domain, params)
     webbrowser.open(url)
     tooltip("Searching images for: %s" % text)
+
+
+def on_search_images(editor):
+    # type: (Any) -> None
+    """Open a Google Image search for the current note's text."""
+    conf = get_config()
+    field_name = conf["field_name"]
+
+    # 1. Legacy editor (aqt.editor.Editor) with direct .note attribute
+    note = getattr(editor, "note", None)
+    if note is not None and getattr(note, "fields", None):
+        model = note.note_type() if hasattr(note, "note_type") else note.model()
+        text = _extract_text_from_fields(note.fields, model, field_name)
+        _search_url_for_text(text)
+        return
+
+    # 2. Modern editor (aqt.editor.NewEditor) using get_note_info asynchronous callback
+    if hasattr(editor, "get_note_info"):
+        def on_note_info(note_info):
+            try:
+                col = getattr(mw, "col", None) or getattr(getattr(editor, "mw", None), "col", None)
+                if not col:
+                    tooltip("No card text found.")
+                    return
+                model = col.models.get(note_info.mid)
+                if not model:
+                    tooltip("No card text found.")
+                    return
+                text = _extract_text_from_fields(note_info.fields, model, field_name)
+                _search_url_for_text(text)
+            except Exception:
+                tooltip("No card text found.")
+
+        editor.get_note_info(on_note_info)
+        return
+
+    # 3. Fallback: try retrieving note from collection via editor.nid
+    nid = getattr(editor, "nid", None)
+    col = getattr(mw, "col", None) or getattr(getattr(editor, "mw", None), "col", None)
+    if nid and col:
+        try:
+            n = col.get_note(int(nid))
+            if n and n.fields:
+                model = n.note_type() if hasattr(n, "note_type") else n.model()
+                text = _extract_text_from_fields(n.fields, model, field_name)
+                _search_url_for_text(text)
+                return
+        except Exception:
+            pass
+
+    tooltip("No card text found.")
 
 
 def add_editor_button(buttons, editor):
